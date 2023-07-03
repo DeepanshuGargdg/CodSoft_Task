@@ -1,0 +1,106 @@
+import java.util.Scanner;
+
+public class Main {
+    private static final int PIN_LENGTH = 4;
+    private static final int MAX_ATTEMPTS = 3;
+    private static final int INITIAL_BALANCE = 1000;
+
+    private int balance;
+    private int pin;
+    private int attempts;
+
+    public Main() {
+        this.balance = INITIAL_BALANCE;
+        this.pin = 1234; // Default PIN, change as needed
+        this.attempts = 0;
+    }
+
+    public void run() {
+        System.out.println("Welcome to the ATM!");
+
+        while (true) {
+            if (checkPIN()) {
+                displayMenu();
+                int option = getOption();
+                performOperation(option);
+            } else {
+                attempts++;
+                if (attempts >= MAX_ATTEMPTS) {
+                    System.out.println("Maximum attempts exceeded. Exiting...");
+                    break;
+                }
+            }
+        }
+    }
+
+    private boolean checkPIN() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter your PIN: ");
+        int enteredPin = scanner.nextInt();
+        return enteredPin == pin;
+    }
+
+    private void displayMenu() {
+        System.out.println("Menu:");
+        System.out.println("1. Check Balance");
+        System.out.println("2. Withdraw");
+        System.out.println("3. Deposit");
+        System.out.println("4. Exit");
+    }
+
+    private int getOption() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter your option: ");
+        return scanner.nextInt();
+    }
+
+    private void performOperation(int option) {
+        switch (option) {
+            case 1:
+                checkBalance();
+                break;
+            case 2:
+                withdraw();
+                break;
+            case 3:
+                deposit();
+                break;
+            case 4:
+                System.out.println("Thank you for using the ATM. Goodbye!");
+                System.exit(0);
+                break;
+            default:
+                System.out.println("Invalid option. Please try again.");
+                break;
+        }
+    }
+
+    private void checkBalance() {
+        System.out.println("Current Balance: $" + balance);
+    }
+
+    private void withdraw() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter amount to withdraw: $");
+        int amount = scanner.nextInt();
+        if (amount <= balance) {
+            balance -= amount;
+            System.out.println("Withdrawal successful. Remaining balance: $" + balance);
+        } else {
+            System.out.println("Insufficient funds.");
+        }
+    }
+
+    private void deposit() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter amount to deposit: $");
+        int amount = scanner.nextInt();
+        balance += amount;
+        System.out.println("Deposit successful. Current balance: $" + balance);
+    }
+
+    public static void main(String[] args) {
+        Main atm = new Main();
+        atm.run();
+    }
+}
